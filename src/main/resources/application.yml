@@ -1,0 +1,81 @@
+# Spring 框架的核心配置
+spring:
+  # 数据源配置，用于连接 PostgreSQL 数据库
+  datasource:
+    url: jdbc:postgresql://localhost:5432/news  # 数据库连接 URL
+    # - localhost: PostgreSQL 服务器地址（本地部署）
+    # - 5432: 默认 PostgreSQL 端口
+    # - news_db: 数据库名称，需提前创建
+    username: news_admin                            # 数据库用户名
+    password: admin                       # 数据库密码，替换为你的实际密码
+    driver-class-name: org.postgresql.Driver      # PostgreSQL JDBC 驱动类
+
+  # JPA 配置，用于 ORM（对象关系映射）
+  jpa:
+    hibernate:
+      ddl-auto: update                           # 自动更新数据库表结构
+      # - update: 启动时根据实体类更新表结构，不会删除现有数据
+      # - 其他选项: create（重建）、validate（验证）、none（不操作）
+    show-sql: true                               # 在日志中显示执行的 SQL 语句，便于调试
+    properties:
+      hibernate:
+        default_schema: news_app
+        dialect: org.hibernate.dialect.PostgreSQLDialect  # 指定 PostgreSQL 方言
+        # - 确保 Hibernate 正确处理 PostgreSQL 的数据类型和特性
+        format_sql: true                          # 格式化输出的 SQL，便于阅读
+
+  # Spring Boot 应用程序的基本配置
+  application:
+    name: news-subscription                     # 应用名称，用于标识服务（可选）
+
+
+
+# JWT 配置，用于用户认证
+jwt:
+  secret: your_jwt_secret_key                   # JWT 签名密钥
+  # - 必须是复杂且安全的字符串，建议至少 32 位，生产环境需妥善保管
+  # - 示例: "thisisaverysecretkeyforjwt1234567890"
+  expiration: 86400000                         # JWT 令牌的有效期（毫秒）
+  # - 86400000 = 24 小时，单位为毫秒，可根据需求调整（如 7 天 = 604800000）
+
+# 支付宝支付配置
+alipay:
+  app-id: your_alipay_app_id                   # 支付宝应用 ID
+  # - 在支付宝开放平台注册应用后获得，用于标识你的应用
+  private-key: your_alipay_private_key         # 支付宝应用私钥
+  # - 用于签名支付请求，需从支付宝开发者中心生成并妥善保存
+  # - 示例: 一长串 RSA 密钥，需完整填入（不含换行符）
+  public-key: your_alipay_public_key           # 支付宝公钥
+  # - 用于验证支付回调，确保数据来源可信，从支付宝开发者中心获取
+  gateway: https://openapi.alipay.com/gateway.do  # 支付宝支付网关地址
+  # - 生产环境使用此地址，沙箱环境可改为 https://openapi.alipaydev.com/gateway.do
+  notify-url: http://your_domain/api/payment/notify  # 支付结果异步通知地址
+  # - 支付宝支付成功后回调的 URL，需公网可访问
+  # - 示例: http://example.com/api/payment/notify
+  return-url: http://your_domain/payment/success     # 支付成功后的同步跳转地址
+  # - 用户支付完成后浏览器跳转的页面，通常是前端页面
+
+# 服务端口配置
+server:
+  port: 8080                                   # 应用运行端口
+  # - 默认 8080，可根据需要改为其他端口（如 8081）
+
+# 日志配置（可选）
+logging:
+  level:
+    root: info                                # 默认日志级别
+    com.czb.news: DEBUG                        # 项目包下的日志级别，便于调试
+    org.hibernate.SQL: DEBUG  # 显示 Hibernate 执行的 SQL
+    org.hibernate.orm.jdbc.bind: TRACE  # 显示 SQL 参数绑定
+    org.springframework.web: DEBUG
+  file:
+    name: logs/news-subscription.log          # 日志文件路径
+    # - 将日志输出到指定文件，便于排查问题
+
+# 其他可选配置（视需求添加）
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics              # 暴露健康检查和指标端点
+  # - 用于监控服务状态，访问 /actuator/health 查看
