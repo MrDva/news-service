@@ -19,7 +19,6 @@ import java.time.LocalDateTime;
 public class PaymentService {
 
     private final PaymentRepository paymentRepository;
-    private final UserService userService;
     private final SubscriptionService subscriptionService; // 新增 SubscriptionService 依赖
 
     @Value("${alipay.app-id}")
@@ -42,7 +41,6 @@ public class PaymentService {
 
     public PaymentService(PaymentRepository paymentRepository, UserService userService, SubscriptionService subscriptionService) {
         this.paymentRepository = paymentRepository;
-        this.userService = userService;
         this.subscriptionService = subscriptionService; // 注入 SubscriptionService
     }
 

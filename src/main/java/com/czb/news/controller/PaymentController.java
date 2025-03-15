@@ -5,6 +5,8 @@ import com.alipay.api.AlipayApiException;
 import com.czb.news.entity.User;
 import com.czb.news.service.PaymentService;
 import com.czb.news.service.UserService;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,24 +42,11 @@ public class PaymentController {
 /**
  * 支付请求 DTO
  */
+@Setter
+@Getter
 class PaymentRequest {
+    // Getters and Setters
     private double amount;
     private String paymentMethod;
 
-    // Getters and Setters
-    public double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
-
-    public String getPaymentMethod() {
-        return paymentMethod;
-    }
-
-    public void setPaymentMethod(String paymentMethod) {
-        this.paymentMethod = paymentMethod;
-    }
 }
