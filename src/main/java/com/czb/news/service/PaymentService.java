@@ -39,7 +39,7 @@ public class PaymentService {
     @Value("${alipay.return-url}")
     private String returnUrl;
 
-    public PaymentService(PaymentRepository paymentRepository, UserService userService, SubscriptionService subscriptionService) {
+    public PaymentService(PaymentRepository paymentRepository, SubscriptionService subscriptionService) {
         this.paymentRepository = paymentRepository;
         this.subscriptionService = subscriptionService; // 注入 SubscriptionService
     }

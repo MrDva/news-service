@@ -5,13 +5,8 @@ import com.alipay.api.AlipayApiException;
 import com.czb.news.entity.User;
 import com.czb.news.service.PaymentService;
 import com.czb.news.service.UserService;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/payment")
@@ -37,16 +32,17 @@ public class PaymentController {
         User user = userService.findByUsername(auth.getName()); // 使用注入的 userService
         return paymentService.createPayment(user, request.getAmount(), request.getPaymentMethod());
     }
-}
 
-/**
- * 支付请求 DTO
- */
-@Setter
-@Getter
-class PaymentRequest {
-    // Getters and Setters
-    private double amount;
-    private String paymentMethod;
-
+    /**
+     * 处理支付宝支付回调（notifyUrl）
+     *
+     * @param outTradeNo  订单号
+     * @param tradeStatus 交易状态
+     */
+    @PostMapping("/notify")
+    public void handleNotify(@RequestParam("out_trade_no") String outTradeNo,
+                             @RequestParam("trade_status") String tradeStatus) {
+        // 调用 PaymentService 处理回调
+        paymentService.handlePaymentCallback(outTradeNo, tradeStatus.equals("TRADE_SUCCESS") ? "success" : "failed");
+    }
 }
