@@ -1,42 +1,63 @@
 package com.czb.news.controller;
 
+
 import com.alipay.api.AlipayApiException;
 import com.czb.news.entity.User;
 import com.czb.news.service.PaymentService;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import com.czb.news.service.UserService;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-/**
- * 支付控制器，处理支付相关请求
- */
 @RestController
 @RequestMapping("/api/payment")
 public class PaymentController {
 
     private final PaymentService paymentService;
+    private final UserService userService; // 声明 UserService 字段
 
-    public PaymentController(PaymentService paymentService) {
+    public PaymentController(PaymentService paymentService, UserService userService) {
         this.paymentService = paymentService;
+        this.userService = userService; // 注入 UserService
     }
 
     /**
      * 创建支付订单
-     * @param user 当前认证用户
-     * @return 支付表单 HTML
+     * @param auth 当前认证用户
+     * @param request 支付请求（金额和支付方式）
+     * @return 支付宝支付表单 HTML
      * @throws AlipayApiException 支付异常
      */
-    @PostMapping("/subscribe")
-    public String createPayment(@AuthenticationPrincipal User user) throws AlipayApiException {
-        return paymentService.createPayment(user, 10.0, "alipay");
+    @PostMapping("/create")
+    public String createPayment(Authentication auth, @RequestBody PaymentRequest request) throws AlipayApiException {
+        User user = userService.findByUsername(auth.getName()); // 使用注入的 userService
+        return paymentService.createPayment(user, request.getAmount(), request.getPaymentMethod());
+    }
+}
+
+/**
+ * 支付请求 DTO
+ */
+class PaymentRequest {
+    private double amount;
+    private String paymentMethod;
+
+    // Getters and Setters
+    public double getAmount() {
+        return amount;
     }
 
-    /**
-     * 处理支付回调（异步通知）
-     * @param orderId 订单 ID
-     * @param status 支付状态
-     */
-    @PostMapping("/notify")
-    public void handlePaymentNotify(@RequestParam String orderId, @RequestParam String status) {
-        paymentService.handlePaymentCallback(orderId, status);
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
     }
 }

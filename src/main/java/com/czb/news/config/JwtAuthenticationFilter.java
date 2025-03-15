@@ -50,7 +50,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(auth); // 设置到 Security 上下文
             }
         }
-        logger.debug("Principal的类型为：{}",SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         filterChain.doFilter(request, response);            // 继续处理请求
     }
 }

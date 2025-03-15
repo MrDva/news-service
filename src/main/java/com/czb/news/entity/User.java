@@ -5,11 +5,9 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.Type;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -31,11 +29,13 @@ public class User  implements UserDetails{
 
     private String email; // 邮箱，可为空
 
-    private boolean isPremium; // 是否为付费用户
 
     @Column(columnDefinition = "json")
     @Type(value = JsonType.class)
     private String preferences; // 用户偏好，JSON 格式存储，如 ["科技", "体育"]
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Subscription> subscriptions;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

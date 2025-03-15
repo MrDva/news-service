@@ -1,9 +1,9 @@
 package com.czb.news.entity;
 
-import java.time.LocalDateTime;
-
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.time.LocalDateTime;
 
 /**
  * 资讯实体类，对应数据库中的 news 表
@@ -26,5 +26,5 @@ public class News {
 
     private LocalDateTime createdAt; // 创建时间
 
-    private boolean isPremium; // 是否为付费内容
+    private boolean premium; // 是否为付费内容
 }

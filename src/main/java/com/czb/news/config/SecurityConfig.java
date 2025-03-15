@@ -7,14 +7,16 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Spring Security 配置类，定义认证和授权规则
@@ -38,8 +40,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())                   // 禁用 CSRF（REST API 不需要）
+                .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))// 禁用 CSRF（REST API 不需要）
                 .authorizeHttpRequests(authorize -> authorize   // 配置请求授权规则
+                        .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/auth/login","/api/auth/register").permitAll() // 登录接口公开访问
                         .anyRequest().authenticated()               // 其他所有请求需认证
                 )
@@ -48,6 +52,20 @@ public class SecurityConfig {
                 .addFilterBefore(jwtAuthenticationFilter,       // 在默认过滤器前添加 JWT 过滤器
                         UsernamePasswordAuthenticationFilter.class);
         return http.build();                                // 返回构建好的过滤器链
+    }
+
+    // 定义 CORS 配置
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("http://localhost:3000")); // 允许前端源
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // 允许方法
+        configuration.setAllowedHeaders(List.of("*")); // 允许所有头
+        configuration.setAllowCredentials(true); // 允许凭据
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration); // 应用于所有路径
+        return source;
     }
 
     /**

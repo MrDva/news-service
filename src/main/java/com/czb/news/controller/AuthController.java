@@ -1,6 +1,5 @@
 package com.czb.news.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.czb.news.config.JwtUtil;
 import com.czb.news.entity.User;
 import com.czb.news.repository.UserRepository;
@@ -11,9 +10,10 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -60,7 +60,6 @@ public class AuthController {
         user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword())); // 加密密码
         user.setEmail(request.getEmail());
-        user.setPremium(false); // 默认非付费用户
         user.setPreferences("[]"); // 默认空偏好
 
         // 保存到数据库

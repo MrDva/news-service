@@ -20,6 +20,7 @@ public class PaymentService {
 
     private final PaymentRepository paymentRepository;
     private final UserService userService;
+    private final SubscriptionService subscriptionService; // 新增 SubscriptionService 依赖
 
     @Value("${alipay.app-id}")
     private String appId;
@@ -39,9 +40,10 @@ public class PaymentService {
     @Value("${alipay.return-url}")
     private String returnUrl;
 
-    public PaymentService(PaymentRepository paymentRepository, UserService userService) {
+    public PaymentService(PaymentRepository paymentRepository, UserService userService, SubscriptionService subscriptionService) {
         this.paymentRepository = paymentRepository;
         this.userService = userService;
+        this.subscriptionService = subscriptionService; // 注入 SubscriptionService
     }
 
     /**
@@ -75,15 +77,17 @@ public class PaymentService {
     }
 
     /**
-     * 处理支付回调（示例）
+     * 处理支付回调，更新订阅状态
      * @param orderId 订单 ID
      * @param status 支付状态
      */
     public void handlePaymentCallback(String orderId, String status) {
-        Payment payment = paymentRepository.findById(Long.valueOf(orderId)).orElseThrow();
+        Payment payment = paymentRepository.findById(Long.valueOf(orderId))
+                .orElseThrow(() -> new RuntimeException("Payment not found"));
         payment.setStatus(status);
         if ("success".equals(status)) {
-            userService.updatePremiumStatus(payment.getUser());
+            // 更新订阅状态，而不是 User.premium
+            subscriptionService.subscribeUser(payment.getUser().getUsername());
         }
         paymentRepository.save(payment);
     }

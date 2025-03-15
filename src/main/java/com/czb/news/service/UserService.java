@@ -52,12 +52,12 @@ public class UserService implements UserDetailsService {
                 user.getUsername(), user.getPassword(), Collections.emptyList());
     }
 
-    /**
-     * 更新用户付费状态
-     * @param user 用户
-     */
-    public void updatePremiumStatus(User user) {
-        user.setPremium(true);
-        userRepository.save(user);
+    public User findByUsername(String username) {
+        Optional<User> byUsername = userRepository.findByUsername(username);
+        if (byUsername.isEmpty()) {
+            throw new RuntimeException("User not found: " + username);
+        }
+        return byUsername.get();
     }
+
 }
