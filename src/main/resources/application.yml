@@ -40,19 +40,19 @@ jwt:
 
 # 支付宝支付配置
 alipay:
-  app-id: your_alipay_app_id                   # 支付宝应用 ID
+  app-id: 2021000146632377                   # 支付宝应用 ID
   # - 在支付宝开放平台注册应用后获得，用于标识你的应用
-  private-key: your_alipay_private_key         # 支付宝应用私钥
+  private-key: MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQCmQrh8rpRJuNRDjqOSa5n7X6jvlrgWxJ5innP5yAy2uQL6+p3ykp4myPgQbW8wfj2EPVXgKJpB4BnuEmgWfCLp4cnVsgFAxT74NAb9e/WPmNq1cBkidc8LuQJfDgBClVq5HQFZzISNhqj/ahQiRGXzkmkJ+wz9x4W2FIfWeo9kqynT2m1fjbblJyELqK28gDBYbChy6WLJ6SfGi6ikuBrLA2MlVYwP8kQMDJwQezR4VzKL7hGoR0aVoAjjgjpcMqIts5CMtop6+C+jKTHWmeM3j7zHP2xgA1pOjV9a46XOkgcwZZsZG9up2mV0hP769Mu7dYKi/MdSoLBEo/leqqAtAgMBAAECggEAPsAJ300IvLZcrs7EH7wq1rwpB5xMCJPW74O8Y/bEDabQYCd8u5Poytyo+5JCF/xdfW6k3cCVT+2j+73IuUvK5ZkJU3UmkeqgNI92X++MI9FeIoKXifEK3vLJ2VRwdrDmF93Bp8HP+ZZsbFH+HVzRWdfVeyXcpl/KsIkZJ7MEMcrmyK9bI0yT3nev8BL+oOdHSqwi3ZCMTtCMRTeFEGlhhqH5/oWiwvsEAkY0X5zviBpimWIoLi06ex2l1zC//JOO4sOLtWtdlCxgVS54b5I6/I25QCQUn2YFYBEmXa64bGWbGh4nCPhVXGwO/CB2c9/mI+Wf9KYoazYOkEgt/L5NRQKBgQDu+m5Nc9eZDYtUpDIlqFGIUZYK4IMSU6nBEGXhdc/d1WihNU5wEn/C2EkTCNNEOieA6JmXu4a0JTMHNae3IVWcNp7oPMtjssyFzBm7L6K00zLnQk/pxakGcI0l3aQWGR7W0Hv7psqSh1ngqfSXLyJ1zbk096z6CRgmDc3vBlhJ9wKBgQCyGlg5WoII/LI42dFP2ZVK2UsSbadnqYWHqtuzyeELtHqdgGEDqW5ARoaO9lEqPgWFnN0rW1MDeaAX2ZCKmxwpfgv4G9kx3GJN/bKpYC1QlFDZ42TY5NKamJ8RQFbgztEY16AA+HdztKVZX1DXhzMNsz3PkMYeehQzgDfaSsf9+wKBgQCn8QYjGA2jWYlY6irzm93wVqWC71QtRO4+5y8xyoFR+++TmsqMp/NxEl4IKmONxvCL/uoxX2/CmYHKx0IdyCdJqHjz7AVjAvwH6u8KROeq++EB8/AE8QtfoykOOzxc6zpo7Aq1RvmFD+lxoP5qYI1vDCvjtUqyTEHUPE9EcskI8QKBgQCjlpcadwuhfZmlpkwfb9c03Mmbr6RoDslbh5AtX2yZ97f4GwcA+gsOdrj5bz218ynXQ/HR9RwWwQxPW8LrzPTdF62ewtWIesjAohoMgQ6eSNzKhZcHsYXQAgd5LQOfkdd1XfjVa2Msn+yQXoA+tywplU1c7blMHQ2ZEFg85Rs1KQKBgQCFWsLi7vfNgPmVwSGnmw0eIM69hqRN61/nOP8qkb2ObeqZCOitZLPMCu5jwjYxIbYiR5RupJSP/LENIHWZDqXxNCUaDD6LCd+DeLwoYW6dr5yvm3Nch76h28Aue4JJuTT+Wm3So3xUbNTs/r8RZn3OwHkUSouxZkw9hhGOmbvEEw==         # 支付宝应用私钥
   # - 用于签名支付请求，需从支付宝开发者中心生成并妥善保存
   # - 示例: 一长串 RSA 密钥，需完整填入（不含换行符）
-  public-key: your_alipay_public_key           # 支付宝公钥
+  public-key: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArTFP/wDDr+a4uGmbtG50cnkVQi2TtjjkIRiuMfFV10dZkv9JdlbUJ+G7aL8kgZnJMizbbVAflcmRK5kArNKnFmeJfPYnzlpDsucK6PO0sEOkLewFL1Z5VbkjwzYBVVy5p9O+NY2X2sUiKB54ksllvgkTqJUfrvuFcqYSs0ixedAwQ02Ccj0ZzF+h87gmIHY4yjIjOutF1lDn83eteoUnJk5l4VM1vqNZyY3X97sguJY5lBR1aJwiqKgngGMsdZZERy8JXSusPIN/WdWE1Wt0dtllh8WrhwCRdhXYPybyRS8D+B0MbVJCj3A5oqE3MKBDt/vks0FjzYYMJLb4IVMOdwIDAQAB           # 支付宝公钥
   # - 用于验证支付回调，确保数据来源可信，从支付宝开发者中心获取
-  gateway: https://openapi.alipay.com/gateway.do  # 支付宝支付网关地址
+  gateway: https://openapi-sandbox.dl.alipaydev.com/gateway.do  # 支付宝支付网关地址
   # - 生产环境使用此地址，沙箱环境可改为 https://openapi.alipaydev.com/gateway.do
-  notify-url: http://your_domain/api/payment/notify  # 支付结果异步通知地址
+  notify-url: https://6bf4-115-227-158-62.ngrok-free.app/api/payment/notify  # 支付结果异步通知地址
   # - 支付宝支付成功后回调的 URL，需公网可访问
   # - 示例: http://example.com/api/payment/notify
-  return-url: http://your_domain/payment/success     # 支付成功后的同步跳转地址
+  return-url: http://localhost:3000/news     # 支付成功后的同步跳转地址
   # - 用户支付完成后浏览器跳转的页面，通常是前端页面
 
 # 服务端口配置

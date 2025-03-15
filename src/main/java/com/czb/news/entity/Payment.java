@@ -27,5 +27,8 @@ public class Payment {
 
     private String status; // 支付状态，如 "pending"、"success"、"failed"
 
+    @Column(name = "order_id")
+    private String orderId;//新增字段，存储 out_trade_no
+
     private LocalDateTime createdAt; // 创建时间
 }

@@ -27,9 +27,11 @@ import java.util.List;
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter; // JWT 过滤器
+    private final AlipaySignatureFilter alipaySignatureFilter;
 
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, AlipaySignatureFilter alipaySignatureFilter) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        this.alipaySignatureFilter = alipaySignatureFilter;
     }
 
     /**
@@ -46,10 +48,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize   // 配置请求授权规则
                         .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/auth/login","/api/auth/register").permitAll() // 登录接口公开访问
+                        .requestMatchers("/api/payment/notify").permitAll()
                         .anyRequest().authenticated()               // 其他所有请求需认证
                 )
                 .sessionManagement(session -> session           // 设置无状态会话
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(alipaySignatureFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthenticationFilter,       // 在默认过滤器前添加 JWT 过滤器
                         UsernamePasswordAuthenticationFilter.class);
         return http.build();                                // 返回构建好的过滤器链

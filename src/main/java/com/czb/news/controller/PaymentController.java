@@ -5,12 +5,16 @@ import com.alipay.api.AlipayApiException;
 import com.czb.news.entity.User;
 import com.czb.news.service.PaymentService;
 import com.czb.news.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/payment")
 public class PaymentController {
+
+    private static final Logger logger = LoggerFactory.getLogger(PaymentController.class);
 
     private final PaymentService paymentService;
     private final UserService userService; // 声明 UserService 字段
@@ -43,6 +47,8 @@ public class PaymentController {
     public void handleNotify(@RequestParam("out_trade_no") String outTradeNo,
                              @RequestParam("trade_status") String tradeStatus) {
         // 调用 PaymentService 处理回调
+        logger.info("Received Alipay callback: out_trade_no={}, trade_status={}", outTradeNo, tradeStatus);
         paymentService.handlePaymentCallback(outTradeNo, tradeStatus.equals("TRADE_SUCCESS") ? "success" : "failed");
+        logger.info("Processed callback for order: {}", outTradeNo);
     }
 }

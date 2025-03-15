@@ -7,6 +7,9 @@ import com.alipay.api.request.AlipayTradePagePayRequest;
 import com.czb.news.entity.Payment;
 import com.czb.news.entity.User;
 import com.czb.news.repository.PaymentRepository;
+import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +20,8 @@ import java.time.LocalDateTime;
  */
 @Service
 public class PaymentService {
+
+    private static final Logger logger = LoggerFactory.getLogger(PaymentService.class);
 
     private final PaymentRepository paymentRepository;
     private final SubscriptionService subscriptionService; // 新增 SubscriptionService 依赖
@@ -67,11 +72,14 @@ public class PaymentService {
         payment.setUser(user);
         payment.setAmount(amount);
         payment.setPaymentMethod(paymentMethod);
+        payment.setOrderId(orderId);
         payment.setStatus("pending");
         payment.setCreatedAt(LocalDateTime.now());
         paymentRepository.save(payment);
-
-        return alipayClient.pageExecute(request).getBody();
+        logger.info("Saved payment with ID: {}, orderId: {}", payment.getId(), orderId);
+        String form = alipayClient.pageExecute(request).getBody();
+        logger.debug("Generated payment form: {}", form);
+        return form;
     }
 
     /**
@@ -79,8 +87,9 @@ public class PaymentService {
      * @param orderId 订单 ID
      * @param status 支付状态
      */
+    @Transactional
     public void handlePaymentCallback(String orderId, String status) {
-        Payment payment = paymentRepository.findById(Long.valueOf(orderId))
+        Payment payment = paymentRepository.findByOrderId(orderId)
                 .orElseThrow(() -> new RuntimeException("Payment not found"));
         payment.setStatus(status);
         if ("success".equals(status)) {

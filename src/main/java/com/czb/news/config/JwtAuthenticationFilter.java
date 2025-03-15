@@ -30,6 +30,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
             throws ServletException, IOException {
+        // 检查是否为支付宝回调且签名已验证
+        if (request.getRequestURI().equals("/api/payment/notify") &&
+                Boolean.TRUE.equals(request.getAttribute("alipaySignatureVerified"))) {
+            logger.info("Skipping JWT authentication for verified Alipay callback");
+            filterChain.doFilter(request, response); // 跳过 JWT 认证
+            return;
+        }
+
         String authHeader = request.getHeader("Authorization"); // 从请求头获取 Authorization
 
         // 检查 header 是否包含 Bearer token
