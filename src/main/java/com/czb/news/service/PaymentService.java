@@ -58,6 +58,10 @@ public class PaymentService {
      * @throws AlipayApiException 支付异常
      */
     public String createPayment(User user, double amount, String paymentMethod) throws AlipayApiException {
+        if (subscriptionService.isSubscribed(user.getUsername())) {
+            logger.info("User {} is already subscribed, rejecting payment request", user.getUsername());
+            throw new IllegalStateException("User is already subscribed");
+        }
         AlipayClient alipayClient = new DefaultAlipayClient(gateway, appId, privateKey, "json", "UTF-8", publicKey, "RSA2");
         AlipayTradePagePayRequest request = new AlipayTradePagePayRequest();
         request.setNotifyUrl(notifyUrl);

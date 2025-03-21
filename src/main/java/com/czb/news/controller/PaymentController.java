@@ -7,8 +7,10 @@ import com.czb.news.service.PaymentService;
 import com.czb.news.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api/payment")
@@ -33,8 +35,13 @@ public class PaymentController {
      */
     @PostMapping("/create")
     public String createPayment(Authentication auth, @RequestBody PaymentRequest request) throws AlipayApiException {
-        User user = userService.findByUsername(auth.getName()); // 使用注入的 userService
-        return paymentService.createPayment(user, request.getAmount(), request.getPaymentMethod());
+        User user = userService.findByUsername(auth.getName());
+        try {
+            return paymentService.createPayment(user, request.getAmount(), request.getPaymentMethod());
+        } catch (IllegalStateException e) {
+            logger.warn("Payment creation rejected: {}", e.getMessage());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
     }
 
     /**

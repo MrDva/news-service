@@ -3,6 +3,7 @@ package com.czb.news.controller;
 
 import com.czb.news.entity.Subscription;
 import com.czb.news.service.SubscriptionService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,8 +28,10 @@ public class SubscriptionController {
 
     // 检查当前用户的订阅状态
     @GetMapping("/status")
-    public boolean checkSubscription(Authentication authentication) {
+    public ResponseEntity<SubscriptionStatusResponse> checkSubscription(Authentication authentication) {
         String username = authentication.getName(); // 获取当前用户名
-        return subscriptionService.isSubscribed(username); // 返回订阅状态
+        SubscriptionStatusResponse subscriptionStatusResponse = new SubscriptionStatusResponse();
+        subscriptionStatusResponse.setSubscribed(subscriptionService.isSubscribed(username));
+        return ResponseEntity.ok(subscriptionStatusResponse);
     }
 }
