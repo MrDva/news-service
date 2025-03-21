@@ -77,9 +77,9 @@ public class PaymentService {
         payment.setCreatedAt(LocalDateTime.now());
         paymentRepository.save(payment);
         logger.info("Saved payment with ID: {}, orderId: {}", payment.getId(), orderId);
-        String form = alipayClient.pageExecute(request).getBody();
-        logger.debug("Generated payment form: {}", form);
-        return form;
+        String paymentForm = alipayClient.pageExecute(request).getBody();
+        logger.debug("Generated payment form: {}", paymentForm);
+        return paymentForm;
     }
 
     /**
